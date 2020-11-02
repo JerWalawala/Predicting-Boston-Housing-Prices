@@ -1,6 +1,6 @@
 ## Predicting-Boston-Housing-Prices
 Based on Boston data, this project uses a variety of forecasting methods to predict the future house prices of the area.
-## <font face="黑体" color=green size=5>1. 问题综述，绿色，尺寸为5</font>
+## 1. 问题综述
 
 ## 2. 数据收集与处理
 
