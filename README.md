@@ -13,6 +13,6 @@ Based on Boston data, this project uses a variety of forecasting methods to pred
 
 ## 3.4 回归树分析
 
-## 模型性能对比分析
+## 3.5 模型性能对比分析
 
-# 预测结果综合分析
+# 4. 预测结果综合分析
