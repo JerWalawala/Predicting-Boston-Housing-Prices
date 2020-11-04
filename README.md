@@ -132,6 +132,84 @@ print('模型性能得分为：',lr.score(X_test,y_test))
 `线性回归预测模型性能得分为：0.68`
 
 ### 3.2 支持向量机分析
+使用支持向量机进行预测过程中，核函数的不同会导致预测结果的显著不相同，因此本部分采用线性核函数、多项式核函数、径向基核函数进行预测分析，探究不同类型核函数对预测结果精度的影响程度。
+
+#### 3.2.1 支持向量机预测
+```
+# 从sklearn.svm中导入支持向量机（回归）模型。
+from sklearn.svm import SVR
+
+# 使用线性核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+linear_svr = SVR(kernel='linear')
+linear_svr.fit(X_train, y_train)
+linear_svr_y_predict = linear_svr.predict(X_test)
+
+# 使用多项式核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+poly_svr = SVR(kernel='poly')
+poly_svr.fit(X_train, y_train)
+poly_svr_y_predict = poly_svr.predict(X_test)
+
+# 使用径向基核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+rbf_svr = SVR(kernel='rbf')
+rbf_svr.fit(X_train, y_train)
+rbf_svr_y_predict = rbf_svr.predict(X_test)
+```
+#### 3.2.2 支持向量机结果分析
+```
+plt.figure(figsize=(15,10))
+
+#分割出4个子图，并分别作图
+for l in range(1,5):
+    plt.subplot(2, 2, l)
+    #绘制哪个指标的图就修改对应的标题名称
+    plt.xlabel("序号",fontdict={'size':12})
+    plt.ylabel("房价",fontdict={'size':12})
+    #根据具体的图形，设置横纵坐标的刻度
+    if l == 1:
+        plt.title('线性核函数预测结果对比分析',fontdict={'size':15}) 
+        type1=plt.scatter(xx,y_test,color='r',label='Test')
+        type2=plt.scatter(xx,linear_svr_y_predict,color='green',label='Predict')
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.legend((type1,type2),("Test","Predict"))
+    if l == 2:
+        plt.title('多项式核函数预测结果对比分析',fontdict={'size':15}) 
+        type1=plt.scatter(xx,y_test,color='r',label='Test')
+        type2=plt.scatter(xx,poly_svr_y_predict,color='blue',label='Predict')
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.legend((type1,type2),("Test","Predict"))
+    if l == 3:
+        plt.title('径向基核函数预测结果对比分析',fontdict={'size':15}) 
+        type1=plt.scatter(xx,y_test,color='r',label='Test')
+        type2=plt.scatter(xx,rbf_svr_y_predict,color='grey',label='Predict')
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.legend((type1,type2),("Test","Predict"))
+    if l == 4:
+        ax5 = sns.kdeplot(y_test,label='Test',color='r',lw=3)
+        ax4 = sns.kdeplot(linear_svr_y_predict,label='linear svr predict',color='green',lw=3)
+        ax5 = sns.kdeplot(poly_svr_y_predict,label='poly svr predict',color='blue',lw=3)
+        ax5 = sns.kdeplot(rbf_svr_y_predict,label='rbf svr predict',color='grey',lw=3)
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.title('波士顿预测房价频率分布曲线图',fontdict={'size':15})
+plt.show()
+```
+![](./images/支持向量机预测结果.png)
+
+图中线性核函数曲线与测试集曲线更为贴合，可以认为，基于线性核函数的支持向量机预测精度相较于基于多项式核函数、径向基核函数的支持向量机更高。
+```
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+linear_svr.fit(X_train, y_train)
+print ('R-squared value of linear SVR is', linear_svr.score(X_test, y_test))
+print ('R-squared value of Poly SVR is', poly_svr.score(X_test, y_test))
+print ('R-squared value of RBF SVR is', rbf_svr.score(X_test, y_test))
+```
+`基于线性核函数的支持向量机预测模型性能得分为：0.64`
+`基于多项式核函数的支持向量机预测模型性能得分为：0.29`
+`基于径向基核函数的支持向量机预测模型性能得分为：0.29`
+通过对上述三个核函数的结果进行性能评估，得到基于线性核函数的支持向量机预测精度为0.64，基于多项式核函数的支持向量机预测精度为0.29、基于径向基核函数的支持向量机预测精度也为0.29，因此三种核函数中线性核函数对于该问题的预测效果更佳。
 
 ### 3.3 K-Means回归分析
 
