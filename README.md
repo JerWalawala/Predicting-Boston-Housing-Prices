@@ -10,15 +10,58 @@ Based on Boston data, this project uses a variety of forecasting methods to pred
 ### 2.1 数据导入
  本项目所使用的波士顿郊区房屋信息数据集被广泛应用于价格预测模型的训练和检验，`python`程序语言中`sklearn`包内置该数据，故我们在使用该数据集的时候，只需要调用具体的`function`即可导入
 ```
-#从sklearn.datasets包中导入波士顿房价数据读取器模块，如果是第一次使用该包的话，运行pip install sklearn导入
+# 从sklearn.datasets包中导入波士顿房价数据读取器模块，如果是第一次使用该包的话，运行pip install sklearn导入
 from sklearn.datasets import load_boston
 
 #将读取的房价数据储存在变量boston中，作为整个程序的数据基础
 boston = load_boston()
 ```
-该数据集由14项字段组成，其中前13项为对指定房屋的**数值型特征描述**，最后一项为**目标房价**。为了使得大家更明白该数据集的含义，这里对每个英文字段的具体含义进行展示
+该数据集由14项字段组成，其中前13项为对指定房屋的**数值型特征描述**，最后一项为**目标房价**。为了使得大家更明白该数据集的含义，这里对每个英文字段的具体含义进行展示:
 
 ![](./images/ziduanming.png)
+
+### 2.2 数据分割
+数据分割是指将所有的样本数据按照一定比例随机分为2个组别。其中一组作为训练样本，用来训练模型，让模型能够认识到该组数据中存在的一种规律或规则；另一组作为测试样本，用真实的样本数据验证训练出来的模型是否是准确，为后续的预测模型的应用提供正确性描述。
+```
+# 从sklearn.cross_validation导入数据分割器
+from sklearn.model_selection import train_test_split
+
+#导入 numpy并重命名为np
+import numpy as np
+
+import matplotlib.pyplot as plt
+#将数据集中的数据转化为python可以更好计算的数组形式
+X=boston.data #13项数值型特征
+y=boston.target #1项目标房价
+
+#随机采样25%的数据构建测试样本，其余作为训练样本
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=33, test_size=0.25)
+
+#由于画图时plt.title默认显示是英文，所以当我们需要设置标体为中文时，需要先设置系统环境,使得输出的标题为中文；
+plt.rcParams['font.sans-serif']=['SimHei']
+plt.rcParams['axes.unicode_minus']=False
+
+# 绘制目标房价频率分布直方图
+#导入python绘图专用包，seaborn以及matplotlib
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# 分析回归目标值的差异。
+#定义绘图画布的大小
+plt.figure(figsize=(5,4))
+#分别绘制整个数据集、训练数据集、测试数据集的房价频率分布直方图
+ax = sns.kdeplot(y,color='r',label='Total',lw=3)
+ax2 = sns.kdeplot(y_train,label='Train',lw=3)
+ax3 = sns.kdeplot(y_test,label='Test',lw=3)
+#绘制横纵坐标轴
+plt.xlabel('房价',fontdict={'size':12})
+plt.ylabel('频率',fontdict={'size':12})
+plt.title('波士顿房价频率分布曲线图',fontdict={'size':15})
+plt.show()
+```
+
+![](./images/波士顿房价样本数据.png)
+
 
 ## 3、模型应用与分析
 
