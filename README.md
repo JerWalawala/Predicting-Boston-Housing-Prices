@@ -1,4 +1,4 @@
-## <font face="timenewroman" color=dodgerblue size=6>Predicting-Boston-Housing-Prices
+## <font face="timenewroman" color=dodgerblue size=10>Predicting-Boston-Housing-Prices
 Based on Boston data, this project uses a variety of forecasting methods to predict the future house prices of the area.
 
 ## <font face="黑体" color=dodgerblue size=6>1、问题综述</font>
