@@ -207,14 +207,75 @@ print ('R-squared value of Poly SVR is', poly_svr.score(X_test, y_test))
 print ('R-squared value of RBF SVR is', rbf_svr.score(X_test, y_test))
 ```
 `基于线性核函数的支持向量机预测模型性能得分为：0.64`
+
 `基于多项式核函数的支持向量机预测模型性能得分为：0.29`
+
 `基于径向基核函数的支持向量机预测模型性能得分为：0.29`
 
 通过对上述三个核函数的结果进行性能评估，得到基于线性核函数的支持向量机预测精度为0.64，基于多项式核函数的支持向量机预测精度为0.29、基于径向基核函数的支持向量机预测精度也为0.29，因此三种核函数中线性核函数对于该问题的预测效果更佳。
 
 ### 3.3 K-Means回归分析
+#### 3.3.1 K-Means回归预测
+K-Means模型是借助周围K个最近训练样本的目标数值，对待测样本的回归值进行决策。在确定最近的训练样本时，通常有两种方式：采用普通算数平均还是考虑距离差异的加权平均。本部分旨在探究不同的距离计算逻辑对K-Means预测结果的影响程度。
+```
+# 从sklearn.neighbors导入KNeighborRegressor（K近邻回归器）。
+from sklearn.neighbors import KNeighborsRegressor
 
-### 3.4 决策树分析
+# 初始化K近邻回归器，并且调整配置，使得预测的方式为平均回归：weights='uniform'。
+uni_knr = KNeighborsRegressor(weights='uniform')
+uni_knr.fit(X_train, y_train)
+uni_knr_y_predict = uni_knr.predict(X_test)
+
+# 初始化K近邻回归器，并且调整配置，使得预测的方式为根据距离加权回归：weights='distance'。
+dis_knr = KNeighborsRegressor(weights='distance')
+dis_knr.fit(X_train, y_train)
+dis_knr_y_predict = dis_knr.predict(X_test)
+```
+
+#### 3.3.2 K-Means回归结果分析
+```
+plt.figure(figsize=(15,10))
+
+#分割出4个子图，并分别作图
+for l in range(1,4):
+    plt.subplot(2, 2, l)
+    #绘制哪个指标的图就修改对应的标题名称
+    plt.xlabel("序号",fontdict={'size':12})
+    plt.ylabel("房价",fontdict={'size':12})
+    #根据具体的图形，设置横纵坐标的刻度
+    if l == 1:
+        plt.title('平均回归预测结果对比分析',fontdict={'size':15}) 
+        type1=plt.scatter(xx,y_test,color='r',label='Test')
+        type2=plt.scatter(xx,uni_knr_y_predict,color='deepskyblue',label='Predict')
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.legend((type1,type2),("Test","Predict"))
+    if l == 2:
+        plt.title('加权回归预测结果对比分析',fontdict={'size':15}) 
+        type1=plt.scatter(xx,y_test,color='r',label='Test')
+        type2=plt.scatter(xx,dis_knr_y_predict,color='gold',label='Predict')
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.legend((type1,type2),("Test","Predict"))
+    if l == 3:
+        ax5 = sns.kdeplot(y_test,label='Test',color='r',lw=3)
+        ax5 = sns.kdeplot(uni_knr_y_predict,label='uni_knr_predict',color='deepskyblue',lw=3)
+        ax5 = sns.kdeplot(dis_knr_y_predict,label='dis_knr_predict',color='gold',lw=3)
+        plt.xlabel('序号',fontdict={'size':12})
+        plt.ylabel('房价',fontdict={'size':12})
+        plt.title('波士顿预测房价频率分布曲线图',fontdict={'size':15})
+plt.show()
+```
+![](./images/K-Means预测结果.png)
+
+```
+# 使用R-squared、MSE以及MAE三种指标对平均回归配置的K近邻模型在测试集上进行性能评估。
+print ('R-squared value of uniform-weighted KNeighorRegression:', uni_knr.score(X_test, y_test))
+print ('R-squared value of distance-weighted KNeighorRegression:', dis_knr.score(X_test, y_test))
+```
+`平均回归K-Means预测模型性能得分为：0.64`
+
+`加权回归K-Means预测模型性能得分为：0.66`
 
 ### 3.5 模型性能对比分析
 
