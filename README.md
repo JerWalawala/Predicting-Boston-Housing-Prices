@@ -7,7 +7,6 @@ Based on Boston data, this project uses a variety of forecasting methods to pred
 -[线性回归预测模型](https://baike.baidu.com/item/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E9%A2%84%E6%B5%8B%E6%B3%95/12609970?fr=aladdin) -[支持向量机预测模型](https://baike.baidu.com/item/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/9683835?fr=aladdin) -[K-Means预测模型](https://baike.baidu.com/item/K%E5%9D%87%E5%80%BC%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/15779627?fromtitle=kmeans&fromid=10932719&fr=aladdin)
 
 **先说结论：线性回归预测模型在本研究采用的3种预测模型中预测性能表现最佳**
-
 ![](./images/多方式预测结果对比分析.png)
 
 ## 2、数据收集与处理
