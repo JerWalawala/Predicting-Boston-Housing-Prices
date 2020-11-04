@@ -59,9 +59,25 @@ plt.ylabel('频率',fontdict={'size':12})
 plt.title('波士顿房价频率分布曲线图',fontdict={'size':15})
 plt.show()
 ```
-
 ![](./images/波士顿房价样本数据.png)
+从上图可以直观得到三个结论，首先是boston房价均值分布在22左右，同时用于训练的数据集和用于测试的数据集在数据特征上和原始数据集保持一致，但是房价的上限和下限之间存在过大的差距。
+### 2.3 数据标准化
+为了消除不同量级下13个特征指标对目标房价的影响，以及降低房价本身的影响，需要对特征值以及目标值进行标准化处理。
+```
+# 从sklearn.preprocessing导入数据标准化模块。
+from sklearn.preprocessing import StandardScaler
 
+# 分别初始化对特征和目标值的标准化器。
+ss_X = StandardScaler()
+ss_y = StandardScaler()
+
+# 分别对训练和测试数据的特征以及目标值进行标准化处理,得到标准化后的训练集和测试集。
+X_train = ss_X.fit_transform(X_train)
+X_test = ss_X.transform(X_test)
+
+y_train = ss_y.fit_transform(y_train)
+y_test = ss_y.transform(y_test)
+```
 
 ## 3、模型应用与分析
 
