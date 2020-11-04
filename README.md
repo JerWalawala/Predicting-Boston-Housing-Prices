@@ -18,7 +18,7 @@ boston = load_boston()
 ```
 该数据集由14项字段组成，其中前13项为对指定房屋的**数值型特征描述**，最后一项为**目标房价**。为了使得大家更明白该数据集的含义，这里对每个英文字段的具体含义进行展示
 
-<img src="https://github.com/JerWalawala/Predicting-Boston-Housing-Prices/blob/main/images/字段名.png" width="150" height="150" alt="图片加载失败时，显示这段字"/>
+![头像](https://github.com/JerWalawala/Predicting-Boston-Housing-Prices/blob/main/images/ziduanming.png)
 
 ## 3、模型应用与分析
 
