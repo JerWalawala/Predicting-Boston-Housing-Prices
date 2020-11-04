@@ -10,7 +10,7 @@ Based on Boston data, this project uses a variety of forecasting methods to pred
 ### 2.1 数据导入
  本项目所使用的波士顿郊区房屋信息数据集被广泛应用于价格预测模型的训练和检验，`python`程序语言中`sklearn`包内置该数据，故我们在使用该数据集的时候，只需要调用具体的`function`即可导入
 ```
-# 从sklearn.datasets包中导入波士顿房价数据读取器模块，如果是第一次使用该包的话，运行pip install sklearn导入
+#从sklearn.datasets包中导入波士顿房价数据读取器模块，如果是第一次使用该包的话，运行pip install sklearn导入
 from sklearn.datasets import load_boston
 
 #将读取的房价数据储存在变量boston中，作为整个程序的数据基础
