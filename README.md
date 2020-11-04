@@ -60,6 +60,7 @@ plt.title('波士顿房价频率分布曲线图',fontdict={'size':15})
 plt.show()
 ```
 ![](./images/波士顿房价样本数据.png)
+
 从上图可以直观得到三个结论，首先是boston房价均值分布在22左右，同时用于训练的数据集和用于测试的数据集在数据特征上和原始数据集保持一致，但是房价的上限和下限之间存在过大的差距。
 ### 2.3 数据标准化
 为了消除不同量级下13个特征指标对目标房价的影响，以及降低房价本身的影响，需要对特征值以及目标值进行标准化处理。
@@ -82,6 +83,51 @@ y_test = ss_y.transform(y_test)
 ## 3、模型应用与分析
 
 ### 3.1 线性回归分析
+#### 3.1.1 线性回归预测
+```
+# 从sklearn.linear_model导入LinearRegression。
+from sklearn.linear_model import LinearRegression
+
+# 使用默认配置初始化线性回归器LinearRegression。
+lr = LinearRegression()
+
+# 使用训练数据进行参数估计。
+lr.fit(X_train, y_train)
+
+# 对测试数据进行回归预测。
+lr_y_predict = lr.predict(X_test)
+```
+#### 3.1.2 线性回归结果分析
+通过绘制测试集和预测结果的散点分布图，不难看出，二者之间不重合的点较多，说明二者在预测的结果上存在一定的差距，预测准确性直观上不太高。
+```
+xx=[]
+for i in range(len(y_test)):
+    xx.append(i)
+type1=plt.scatter(xx,y_test,color='r',label='Test')
+type2=plt.scatter(xx,lr_y_predict,color='orange',label='Predict')
+plt.xlabel('序号',fontdict={'size':12})
+plt.ylabel('房价',fontdict={'size':12})
+plt.title('线性回归波士顿房价预测结果对比分析',fontdict={'size':15})
+plt.legend((type1,type2),("Test","Predict"))
+plt.show()
+```
+![](./images/线性回归预测结果散点图.png)
+为了更直观的看出来预测结果和测试数据集之间的差异，通过统计各个区段之间的房价形成房价频率分布直方图。图图中不难看出，二者仅在有限几个小区段内重叠，这说明预测房价和测试结果之间存在差异较大。
+```
+#通过绘制频率分布曲线探究房价和测试结果之间存在的差异
+ax5 = sns.kdeplot(y_test,label='Test',color='r',lw=3)
+ax4 = sns.kdeplot(lr_y_predict,label='predict',color='orange',lw=3)
+plt.xlabel('序号',fontdict={'size':12})
+plt.ylabel('房价',fontdict={'size':12})
+plt.title('波士顿预测房价频率分布曲线图',fontdict={'size':15})
+plt.show()
+```
+![](./images/线性回归预测结果曲线图.png)
+为充分量化预测值和测试值之间的差距，评估模型精度，这里导入线性回归模型自带的评估模块，输出评估结果为0.6757955，总的来说模型精度不太高。
+```
+print('模型性能得分为：',lr.score(X_test,y_test))
+```
+`线性回归预测模型性能得分为：0.68`
 
 ### 3.2 支持向量机分析
 
