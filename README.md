@@ -1,5 +1,8 @@
 ## Predicting-Boston-Housing-Prices
 Based on Boston data, this project uses a variety of forecasting methods to predict the future house prices of the area.
+
+** 写在前面，本程序中有图片，但是国内网络很多时候看不到图片，需要科学上网才能看到 **
+
 ## 1、问题综述
 
 在这个项目中，你将利用马萨诸塞州波士顿郊区的房屋信息数据训练和测试多个**价格预测模型**，并对模型的性能和预测能力进行测试。项目涉及3个模型如下所示：
