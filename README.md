@@ -285,3 +285,99 @@ print ('R-squared value of distance-weighted KNeighorRegression:', dis_knr.score
 
 通过对比以上6种预测模型，从图像特征来看，线性回归预测模型，基于线性核函数的支持向量机预测模型，平均回归K-Means,加权回归K-Means四种模型与测试集图像贴合，说明4种模型能够较好反应改组数据的规律。同时通过精确的量化结果看出，在上述四种较为优越的模型中，线性回归预测模型具有更好的预测精度，达到0.68，其余3种较为优越的模型预测精度也都达到0.6以上，但是也都没有达到0.7及以上，说明上述的4种模型性能只能称为一般，而不是卓越。
 
+## 4、降维处理
+```
+# 导入pandas用于数据读取和处理。
+import pandas as pd
+# 从sklearn.decomposition导入PCA。 
+from sklearn.decomposition import PCA
+# 导入基于线性核的支持向量机分类器。
+from sklearn.svm import LinearSVC
+```
+
+```
+# 初始化一个可以将高维度特征向量压缩至5个维度的PCA。 
+estimator = PCA(n_components=5)
+# 利用训练特征决定（fit）5个正交维度的方向，并转化（transform）原训练特征。
+pca_X_train = estimator.fit_transform(X_train)
+# 测试特征也按照上述的5个正交维度方向进行转化（transform）。
+pca_X_test = estimator.transform(X_test)
+```
+###  4.1 线性回归分析
+```
+# 从sklearn.linear_model导入LinearRegression。
+from sklearn.linear_model import LinearRegression
+
+# 使用默认配置初始化线性回归器LinearRegression。
+pca_lr = LinearRegression()
+
+# 使用训练数据进行参数估计。
+pca_lr.fit(pca_X_train , y_train)
+
+# 对测试数据进行回归预测。
+pca_lr_y_predict = pca_lr.predict(pca_X_test)
+
+pca_lr=pca_lr.score(pca_X_test,y_test)
+print('模型性能得分为：',pca_lr)
+
+print("线性回归正确率的损失率：%.2f%%" % ((0.6757955014529462-0.41180998768289834)/0.6757955014529462*100))
+```
+
+通过降维之后，模型得分为0.41180998768289834，降低了39.06%，因此此次降维性价比较低，并不适合。
+
+###  4.2 支持向量机分析
+```
+# 从sklearn.svm中导入支持向量机（回归）模型。
+from sklearn.svm import SVR
+
+# 使用线性核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+pca_linear_svr = SVR(kernel='linear')
+pca_linear_svr.fit(pca_X_train, y_train)
+pca_linear_svr_y_predict = pca_linear_svr.predict(pca_X_test)
+
+# 使用多项式核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+pca_poly_svr = SVR(kernel='poly')
+pca_poly_svr.fit(pca_X_train, y_train)
+pca_poly_svr_y_predict = pca_poly_svr.predict(pca_X_test)
+
+# 使用径向基核函数配置的支持向量机进行回归训练，并且对测试样本进行预测。
+pca_rbf_svr = SVR(kernel='rbf')
+pca_rbf_svr.fit(pca_X_train, y_train)
+pca_rbf_svr_y_predict = pca_rbf_svr.predict(pca_X_test)
+
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+print ('R-squared value of linear SVR is', pca_linear_svr.score(pca_X_test, y_test))
+print ('R-squared value of Poly SVR is', pca_poly_svr.score(pca_X_test, y_test))
+print ('R-squared value of RBF SVR is', pca_rbf_svr.score(pca_X_test, y_test))
+
+print("linear SVR正确率的损失率：%.2f%%" % ((0.6433098081925588-0.38178503548632525)/0.6433098081925588*100))
+print("Poly SVR正确率的损失率：%.2f%%" % ((0.28820921480393236-0.3322537342779148)/0.28820921480393236*100))
+print("RBF SVR正确率的损失率：%.2f%%" % (( 0.28838455739462654-0.3162693736216051)/ 0.28838455739462654*100))
+```
+
+通过降维之后，得到基于线性核函数的支持向量机预测精度为0.38178503548632525，基于多项式核函数的支持向量机预测精度为 0.3322537342779148、基于径向基核函数的支持向量机预测精度为0.3162693736216051，分别降低了40.65%、-15.28%、-9.67%，因此在基于线性核函数的支持向量机中，降维并不合适,在基于多项式核函数的支持向量机与基于径向基核函数的支持向量机降维后，准确率反而升高，因此比较适合。
+
+###  4.3 K-Means回归分析
+```
+# 从sklearn.neighbors导入KNeighborRegressor（K近邻回归器）。
+from sklearn.neighbors import KNeighborsRegressor
+
+# 初始化K近邻回归器，并且调整配置，使得预测的方式为平均回归：weights='uniform'。
+pca_uni_knr = KNeighborsRegressor(weights='uniform')
+pca_uni_knr.fit(pca_X_train, y_train)
+pca_uni_knr_y_predict = pca_uni_knr.predict(pca_X_test)
+
+# 初始化K近邻回归器，并且调整配置，使得预测的方式为根据距离加权回归：weights='distance'。
+pca_dis_knr = KNeighborsRegressor(weights='distance')
+pca_dis_knr.fit(pca_X_train, y_train)
+pca_dis_knr_y_predict = pca_dis_knr.predict(pca_X_test)
+
+# 使用R-squared对平均回归配置的K近邻模型在测试集上进行性能评估。
+print ('R-squared value of uniform-weighted KNeighorRegression:', pca_uni_knr.score(pca_X_test, y_test))
+print ('R-squared value of distance-weighted KNeighorRegression:', pca_dis_knr.score(pca_X_test, y_test))
+
+print("uniform-weighted KNeighorRegression正确率的损失率：%.2f%%" % ((0.663078948635538-0.45805161282626017)/0.663078948635538*100))
+print("distance-weighted KNeighorRegression正确率的损失率：%.2f%%" % ((0.6868617581816767- 0.4993185260715993)/0.6868617581816767*100))
+```
+
+通过降维之后，uniform-weighted KNeighorRegression预测精度为0.45805161282626017，distance-weighted KNeighorRegression为0.4993185260715993，分别降低了30.92%、27.30%，因此两者性价比均不高。
